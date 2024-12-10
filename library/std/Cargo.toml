@@ -156,4 +156,5 @@ check-cfg = [
     'cfg(feature, values(any()))',
     # #[cfg(bootstrap)] rtems
     'cfg(target_os, values("rtems"))',
+    'cfg(target_os, values("switch", "queue"))',
 ]
