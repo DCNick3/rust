@@ -478,6 +478,7 @@ impl RustcInternal for Abi {
             Abi::RustCold => rustc_target::spec::abi::Abi::RustCold,
             Abi::RiscvInterruptM => rustc_target::spec::abi::Abi::RiscvInterruptM,
             Abi::RiscvInterruptS => rustc_target::spec::abi::Abi::RiscvInterruptS,
+            Abi::ForceIndirectReturn => rustc_target::spec::abi::Abi::ForceIndirectReturn,
         }
     }
 }

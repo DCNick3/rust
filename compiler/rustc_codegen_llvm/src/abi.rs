@@ -658,7 +658,8 @@ impl From<Conv> for llvm::CallConv {
             | Conv::Rust
             | Conv::CCmseNonSecureCall
             | Conv::CCmseNonSecureEntry
-            | Conv::RiscvInterrupt { .. } => llvm::CCallConv,
+            | Conv::RiscvInterrupt { .. }
+            | Conv::ForceIndirectReturn => llvm::CCallConv,
             Conv::Cold => llvm::ColdCallConv,
             Conv::PreserveMost => llvm::PreserveMost,
             Conv::PreserveAll => llvm::PreserveAll,

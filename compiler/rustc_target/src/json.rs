@@ -119,6 +119,7 @@ impl ToJson for crate::abi::call::Conv {
                 buf = format!("RiscvInterrupt({})", kind.as_str());
                 &buf
             }
+            Self::ForceIndirectReturn => "ForceIndirectReturn",
         };
         Json::String(s.to_owned())
     }

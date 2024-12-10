@@ -118,6 +118,7 @@ impl<'tcx> Stable<'tcx> for rustc_target::abi::call::Conv {
             Conv::AvrInterrupt => CallConvention::AvrInterrupt,
             Conv::AvrNonBlockingInterrupt => CallConvention::AvrNonBlockingInterrupt,
             Conv::RiscvInterrupt { .. } => CallConvention::RiscvInterrupt,
+            Conv::ForceIndirectReturn => CallConvention::ForceIndirectReturn,
         }
     }
 }

@@ -10,6 +10,7 @@ pub(crate) enum AbiKind {
     AAPCS,
     DarwinPCS,
     Win64,
+    ForceIndirectReturn,
 }
 
 fn is_homogeneous_aggregate<'a, Ty, C>(cx: &C, arg: &mut ArgAbi<'a, Ty>) -> Option<Uniform>
@@ -42,6 +43,10 @@ where
 {
     if !ret.layout.is_sized() {
         // Not touching this...
+        return;
+    }
+    if kind == AbiKind::ForceIndirectReturn {
+        ret.make_indirect();
         return;
     }
     if !ret.layout.is_aggregate() {
