@@ -452,4 +452,6 @@ pub enum CallConvention {
     AvrNonBlockingInterrupt,
 
     RiscvInterrupt,
+
+    ForceIndirectReturn,
 }

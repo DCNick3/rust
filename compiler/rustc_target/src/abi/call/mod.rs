@@ -798,6 +798,8 @@ pub enum Conv {
     AvrNonBlockingInterrupt,
 
     RiscvInterrupt { kind: RiscvInterruptKind },
+
+    ForceIndirectReturn,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug, HashStable_Generic)]
@@ -909,7 +911,9 @@ impl<'a, Ty> FnAbi<'a, Ty> {
                 }
             },
             "aarch64" | "arm64ec" => {
-                let kind = if cx.target_spec().is_like_osx {
+                let kind = if abi == spec::abi::Abi::ForceIndirectReturn {
+                    aarch64::AbiKind::ForceIndirectReturn
+                } else if cx.target_spec().is_like_osx {
                     aarch64::AbiKind::DarwinPCS
                 } else if cx.target_spec().is_like_windows {
                     aarch64::AbiKind::Win64
@@ -991,6 +995,7 @@ impl FromStr for Conv {
             "RiscvInterrupt(supervisor)" => {
                 Ok(Conv::RiscvInterrupt { kind: RiscvInterruptKind::Supervisor })
             }
+            "ForceIndirectReturn" => Ok(Conv::ForceIndirectReturn),
             _ => Err(format!("'{s}' is not a valid value for entry function call convention.")),
         }
     }

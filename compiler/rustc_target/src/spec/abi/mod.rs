@@ -63,6 +63,7 @@ pub enum Abi {
     RustCold,
     RiscvInterruptM,
     RiscvInterruptS,
+    ForceIndirectReturn,
 }
 
 impl Abi {
@@ -134,6 +135,7 @@ const AbiDatas: &[AbiData] = &[
     AbiData { abi: Abi::RustCold, name: "rust-cold" },
     AbiData { abi: Abi::RiscvInterruptM, name: "riscv-interrupt-m" },
     AbiData { abi: Abi::RiscvInterruptS, name: "riscv-interrupt-s" },
+    AbiData { abi: Abi::ForceIndirectReturn, name: "force-indirect-return" },
 ];
 
 #[derive(Copy, Clone, Debug)]
@@ -197,7 +199,7 @@ pub fn is_stable(name: &str) -> Result<(), AbiDisabled> {
         "Rust" | "C" | "C-unwind" | "cdecl" | "cdecl-unwind" | "stdcall" | "stdcall-unwind"
         | "fastcall" | "fastcall-unwind" | "aapcs" | "aapcs-unwind" | "win64" | "win64-unwind"
         | "sysv64" | "sysv64-unwind" | "system" | "system-unwind" | "efiapi" | "thiscall"
-        | "thiscall-unwind" => Ok(()),
+        | "thiscall-unwind" | "force-indirect-return" => Ok(()),
         "rust-intrinsic" => Err(AbiDisabled::Unstable {
             feature: sym::intrinsics,
             explain: "intrinsics are subject to change",
@@ -302,6 +304,7 @@ impl Abi {
             RustCold => 32,
             RiscvInterruptM => 33,
             RiscvInterruptS => 34,
+            ForceIndirectReturn => 35,
         };
         debug_assert!(
             AbiDatas
