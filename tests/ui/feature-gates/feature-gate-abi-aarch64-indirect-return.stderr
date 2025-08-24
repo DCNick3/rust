@@ -1,0 +1,66 @@
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:10:8
+   |
+LL | extern "aarch64-indirect-return" fn fu() {}
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:13:12
+   |
+LL |     extern "aarch64-indirect-return" fn mu();
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:14:12
+   |
+LL |     extern "aarch64-indirect-return" fn dmu() {}
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:19:12
+   |
+LL |     extern "aarch64-indirect-return" fn mu() {}
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:23:12
+   |
+LL |     extern "aarch64-indirect-return" fn imu() {}
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:26:19
+   |
+LL | type TAU = extern "aarch64-indirect-return" fn();
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error[E0658]: the extern "aarch64-indirect-return" ABI is experimental and subject to change
+  --> $DIR/feature-gate-abi_indirect_return.rs:28:8
+   |
+LL | extern "aarch64-indirect-return" {}
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: add `#![feature(abi_aarch64_indirect_return)]` to the crate attributes to enable
+   = note: this compiler was built on YYYY-MM-DD; consider upgrading it if it is out of date
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0658`.

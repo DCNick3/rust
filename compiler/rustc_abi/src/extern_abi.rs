@@ -63,6 +63,12 @@ pub enum ExternAbi {
     /// extremely constrained barely-C ABI for TrustZone
     CmseNonSecureEntry,
 
+    /* aarch64 */
+    /// Like [`ExternAbi::C`], but the first arguments is passed in Indirect Result Location Register
+    Aarch64IndirectReturn {
+        unwind: bool,
+    },
+
     /* gpu */
     /// An entry-point function called by the GPU's host
     // FIXME: should not be callable from Rust on GPU targets, is for host's use only
@@ -144,6 +150,8 @@ abi_impls! {
             Rust =><= "Rust",
             Aapcs { unwind: false } =><= "aapcs",
             Aapcs { unwind: true } =><= "aapcs-unwind",
+            Aarch64IndirectReturn { unwind: false } =><= "aarch64-indirect-return",
+            Aarch64IndirectReturn { unwind: true } =><= "aarch64-indirect-return-unwind",
             AvrInterrupt =><= "avr-interrupt",
             AvrNonBlockingInterrupt =><= "avr-non-blocking-interrupt",
             Cdecl { unwind: false } =><= "cdecl",

@@ -614,6 +614,9 @@ impl RustcInternal for Abi {
             Abi::Aapcs { unwind } => rustc_abi::ExternAbi::Aapcs { unwind },
             Abi::CCmseNonSecureCall => rustc_abi::ExternAbi::CmseNonSecureCall,
             Abi::CCmseNonSecureEntry => rustc_abi::ExternAbi::CmseNonSecureEntry,
+            Abi::Aarch64IndirectReturn { unwind } => {
+                rustc_abi::ExternAbi::Aarch64IndirectReturn { unwind }
+            }
             Abi::Win64 { unwind } => rustc_abi::ExternAbi::Win64 { unwind },
             Abi::SysV64 { unwind } => rustc_abi::ExternAbi::SysV64 { unwind },
             Abi::PtxKernel => rustc_abi::ExternAbi::PtxKernel,

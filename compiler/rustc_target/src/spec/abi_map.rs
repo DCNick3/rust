@@ -1,4 +1,4 @@
-use rustc_abi::{ArmCall, CanonAbi, ExternAbi, InterruptKind, X86Call};
+use rustc_abi::{Aarch64Call, ArmCall, CanonAbi, ExternAbi, InterruptKind, X86Call};
 
 use crate::spec::Target;
 
@@ -119,6 +119,12 @@ impl AbiMap {
             (ExternAbi::CmseNonSecureCall | ExternAbi::CmseNonSecureEntry, ..) => {
                 return AbiMapping::Invalid;
             }
+
+            /* aarch64 */
+            (ExternAbi::Aarch64IndirectReturn { .. }, Arch::Aarch64) => {
+                CanonAbi::Aarch64(Aarch64Call::IndirectReturn)
+            }
+            (ExternAbi::Aarch64IndirectReturn { .. }, _) => return AbiMapping::Invalid,
 
             /* gpu */
             (ExternAbi::PtxKernel, Arch::Nvptx) => CanonAbi::GpuKernel,

@@ -21,7 +21,7 @@ use std::ops::{Deref, DerefMut};
 use std::str::FromStr;
 
 use itertools::{Either, Itertools};
-use rustc_abi::{CanonAbi, ExternAbi, InterruptKind};
+use rustc_abi::{Aarch64Call, CanonAbi, ExternAbi, InterruptKind};
 use rustc_ast::visit::{AssocCtxt, BoundKind, FnCtxt, FnKind, Visitor, walk_list};
 use rustc_ast::*;
 use rustc_ast_pretty::pprust::{self, State};
@@ -416,22 +416,22 @@ impl<'a> AstValidator<'a> {
                                 self.dcx().emit_err(errors::AbiX86Interrupt { spans, param_count });
                             }
 
-                            if let FnRetTy::Ty(ref ret_ty) = sig.decl.output
-                                && match &ret_ty.kind {
-                                    TyKind::Never => false,
-                                    TyKind::Tup(tup) if tup.is_empty() => false,
-                                    _ => true,
-                                }
-                            {
-                                self.dcx().emit_err(errors::AbiMustNotHaveReturnType {
-                                    span: ret_ty.span,
-                                    abi,
-                                });
-                            }
+                            self.reject_return(abi, sig);
                         } else {
                             // An `extern "interrupt"` function must have type `fn()`.
                             self.reject_params_or_return(abi, ident, sig);
                         }
+                    }
+
+                    CanonAbi::Aarch64(Aarch64Call::IndirectReturn) => {
+                        // An indirect-return function cannot be `async` and/or `gen`.
+                        self.reject_coroutine(abi, sig);
+
+                        // FIXME: we might want to deny non-unsafe definitions with this calling convention
+                        // An indirect-return function must return `()`
+                        self.reject_return(abi, sig);
+
+                        // FIXME: this should reject functions that do not have a mutable pointer as the first argument
                     }
                 }
             }
@@ -476,6 +476,18 @@ impl<'a> AstValidator<'a> {
                 coroutine_kind_span,
                 coroutine_kind_str: coroutine_kind.as_str(),
             });
+        }
+    }
+
+    fn reject_return(&self, abi: ExternAbi, sig: &FnSig) {
+        if let FnRetTy::Ty(ref ret_ty) = sig.decl.output
+            && match &ret_ty.kind {
+                TyKind::Never => false,
+                TyKind::Tup(tup) if tup.is_empty() => false,
+                _ => true,
+            }
+        {
+            self.dcx().emit_err(errors::AbiMustNotHaveReturnType { span: ret_ty.span, abi });
         }
     }
 

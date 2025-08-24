@@ -1224,6 +1224,7 @@ pub fn fn_can_unwind(tcx: TyCtxt<'_>, fn_def_id: Option<DefId>, abi: ExternAbi) 
         | Vectorcall { unwind }
         | Thiscall { unwind }
         | Aapcs { unwind }
+        | Aarch64IndirectReturn { unwind }
         | Win64 { unwind }
         | SysV64 { unwind } => unwind,
         PtxKernel

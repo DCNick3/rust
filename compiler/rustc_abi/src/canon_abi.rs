@@ -33,6 +33,8 @@ pub enum CanonAbi {
 
     /// ABIs relevant to 32-bit Arm targets
     Arm(ArmCall),
+    /// ABIs relevant to 64-bit Arm targets
+    Aarch64(Aarch64Call),
     /// ABI relevant to GPUs: the entry point for a GPU kernel
     GpuKernel,
 
@@ -56,7 +58,7 @@ impl fmt::Display for CanonAbi {
         // convert to the ExternAbi that *shares a string* with this CanonAbi.
         // FIXME: ideally we'd avoid printing `CanonAbi`, and preserve `ExternAbi` everywhere
         // that we need to generate error messages.
-        let erased_abi = match self {
+        let erased_abi = match *self {
             CanonAbi::C => ExternAbi::C { unwind: false },
             CanonAbi::Rust => ExternAbi::Rust,
             CanonAbi::RustCold => ExternAbi::RustCold,
@@ -65,6 +67,9 @@ impl fmt::Display for CanonAbi {
                 ArmCall::Aapcs => ExternAbi::Aapcs { unwind: false },
                 ArmCall::CCmseNonSecureCall => ExternAbi::CmseNonSecureCall,
                 ArmCall::CCmseNonSecureEntry => ExternAbi::CmseNonSecureEntry,
+            },
+            CanonAbi::Aarch64(aarch64_call) => match aarch64_call {
+                Aarch64Call::IndirectReturn => ExternAbi::Aarch64IndirectReturn { unwind: false },
             },
             CanonAbi::GpuKernel => ExternAbi::GpuKernel,
             CanonAbi::Interrupt(interrupt_kind) => match interrupt_kind {
@@ -130,4 +135,12 @@ pub enum ArmCall {
     Aapcs,
     CCmseNonSecureCall,
     CCmseNonSecureEntry,
+}
+
+/// ABIs defined for 64-bit Arm
+#[derive(Copy, Clone, Debug)]
+#[derive(PartialOrd, Ord, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "nightly", derive(HashStable_Generic))]
+pub enum Aarch64Call {
+    IndirectReturn,
 }

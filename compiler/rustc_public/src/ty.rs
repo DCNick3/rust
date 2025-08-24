@@ -1138,6 +1138,7 @@ pub enum Abi {
     RiscvInterruptS,
     RustInvalid,
     Custom,
+    Aarch64IndirectReturn { unwind: bool },
 }
 
 /// A binder represents a possibly generic type and its bound vars.

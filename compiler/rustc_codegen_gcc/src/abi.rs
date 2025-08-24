@@ -2,7 +2,7 @@
 use gccjit::FnAttribute;
 use gccjit::{ToLValue, ToRValue, Type};
 #[cfg(feature = "master")]
-use rustc_abi::{ArmCall, CanonAbi, InterruptKind, X86Call};
+use rustc_abi::{Aarch64Call, ArmCall, CanonAbi, InterruptKind, X86Call};
 use rustc_abi::{Reg, RegKind};
 use rustc_codegen_ssa::traits::{AbiBuilderMethods, BaseTypeCodegenMethods};
 use rustc_data_structures::fx::FxHashSet;
@@ -250,6 +250,9 @@ pub fn conv_to_fn_attribute<'gcc>(conv: CanonAbi, arch: &str) -> Option<FnAttrib
             ArmCall::CCmseNonSecureCall => FnAttribute::ArmCmseNonsecureCall,
             ArmCall::CCmseNonSecureEntry => FnAttribute::ArmCmseNonsecureEntry,
             ArmCall::Aapcs => FnAttribute::ArmPcs("aapcs"),
+        },
+        CanonAbi::Aarch64(aarch64_call) => match aarch64_call {
+            Aarch64Call::IndirectReturn => return None,
         },
         CanonAbi::GpuKernel => {
             if arch == "amdgpu" {

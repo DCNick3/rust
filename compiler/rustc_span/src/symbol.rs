@@ -402,6 +402,7 @@ symbols! {
         aarch64_unstable_target_feature,
         aarch64_ver_target_feature,
         abi,
+        abi_aarch64_indirect_return,
         abi_amdgpu_kernel,
         abi_avr_interrupt,
         abi_c_cmse_nonsecure_call,

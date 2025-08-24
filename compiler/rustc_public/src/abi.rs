@@ -436,6 +436,8 @@ pub enum CallConvention {
     CCmseNonSecureCall,
     CCmseNonSecureEntry,
 
+    Aarch64IndirectReturn,
+
     Msp430Intr,
 
     PtxKernel,

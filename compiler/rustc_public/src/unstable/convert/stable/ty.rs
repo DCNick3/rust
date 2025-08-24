@@ -1031,6 +1031,7 @@ impl<'tcx> Stable<'tcx> for rustc_abi::ExternAbi {
             ExternAbi::RiscvInterruptM => Abi::RiscvInterruptM,
             ExternAbi::RiscvInterruptS => Abi::RiscvInterruptS,
             ExternAbi::Custom => Abi::Custom,
+            ExternAbi::Aarch64IndirectReturn { unwind } => Abi::Aarch64IndirectReturn { unwind },
         }
     }
 }

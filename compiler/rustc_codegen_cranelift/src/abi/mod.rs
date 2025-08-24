@@ -10,7 +10,7 @@ use std::mem;
 use cranelift_codegen::ir::{ArgumentPurpose, SigRef};
 use cranelift_codegen::isa::CallConv;
 use cranelift_module::ModuleError;
-use rustc_abi::{CanonAbi, ExternAbi, X86Call};
+use rustc_abi::{Aarch64Call, CanonAbi, ExternAbi, X86Call};
 use rustc_codegen_ssa::base::is_call_from_compiler_builtins_to_upstream_monomorphization;
 use rustc_codegen_ssa::errors::CompilerBuiltinsCannotCall;
 use rustc_middle::middle::codegen_fn_attrs::CodegenFnAttrFlags;
@@ -61,6 +61,9 @@ pub(crate) fn conv_to_call_conv(
             X86Call::Win64 => CallConv::WindowsFastcall,
             // Should already get a back compat warning
             _ => default_call_conv,
+        },
+        CanonAbi::Aarch64(aarch64_call) => match aarch64_call {
+            Aarch64Call::IndirectReturn => default_call_conv,
         },
 
         CanonAbi::Interrupt(_) | CanonAbi::Arm(_) => {
@@ -610,7 +613,7 @@ pub(crate) fn codegen_terminator_call<'tcx>(
         target: CallTarget,
         call_args: &mut Vec<Value>,
     ) {
-        if fn_abi.conv != CanonAbi::C {
+        if !matches!(fn_abi.conv, CanonAbi::C) {
             fx.tcx.dcx().span_fatal(
                 source_info.span,
                 format!("Variadic call for non-C abi {:?}", fn_abi.conv),

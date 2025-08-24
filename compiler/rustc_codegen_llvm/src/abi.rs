@@ -3,8 +3,8 @@ use std::cmp;
 
 use libc::c_uint;
 use rustc_abi::{
-    ArmCall, BackendRepr, CanonAbi, HasDataLayout, InterruptKind, Primitive, Reg, RegKind, Size,
-    X86Call,
+    Aarch64Call, ArmCall, BackendRepr, CanonAbi, HasDataLayout, InterruptKind, Primitive, Reg,
+    RegKind, Size, X86Call,
 };
 use rustc_codegen_ssa::MemFlags;
 use rustc_codegen_ssa::mir::operand::{OperandRef, OperandValue};
@@ -39,8 +39,10 @@ trait ArgAttributesExt {
     );
 }
 
-const ABI_AFFECTING_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 1] =
-    [(ArgAttribute::InReg, llvm::AttributeKind::InReg)];
+const ABI_AFFECTING_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 2] = [
+    (ArgAttribute::InReg, llvm::AttributeKind::InReg),
+    (ArgAttribute::StructRet, llvm::AttributeKind::StructRet),
+];
 
 const OPTIMIZATION_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 6] = [
     (ArgAttribute::NoAlias, llvm::AttributeKind::NoAlias),
@@ -687,6 +689,9 @@ impl llvm::CallConv {
             CanonAbi::Arm(arm_call) => match arm_call {
                 ArmCall::Aapcs => llvm::ArmAapcsCallConv,
                 ArmCall::CCmseNonSecureCall | ArmCall::CCmseNonSecureEntry => llvm::CCallConv,
+            },
+            CanonAbi::Aarch64(aarch64_call) => match aarch64_call {
+                Aarch64Call::IndirectReturn => llvm::CCallConv,
             },
             CanonAbi::X86(x86_call) => match x86_call {
                 X86Call::Fastcall => llvm::X86FastcallCallConv,

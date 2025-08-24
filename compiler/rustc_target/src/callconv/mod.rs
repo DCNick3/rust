@@ -110,9 +110,9 @@ mod attr_impl {
 
     // The subset of llvm::Attribute needed for arguments, packed into a bitfield.
     #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, HashStable_Generic)]
-    pub struct ArgAttribute(u8);
+    pub struct ArgAttribute(u16);
     bitflags::bitflags! {
-        impl ArgAttribute: u8 {
+        impl ArgAttribute: u16 {
             const NoAlias   = 1 << 1;
             const NoCapture = 1 << 2;
             const NonNull   = 1 << 3;
@@ -120,6 +120,7 @@ mod attr_impl {
             const InReg     = 1 << 5;
             const NoUndef = 1 << 6;
             const CapturesReadOnly = 1 << 7;
+            const StructRet = 1 << 8;
         }
     }
     rustc_data_structures::external_bitflags_debug! { ArgAttribute }
@@ -672,7 +673,8 @@ impl<'a, Ty> FnAbi<'a, Ty> {
                 } else {
                     aarch64::AbiKind::AAPCS
                 };
-                aarch64::compute_abi_info(cx, self, kind)
+                let is_indirect_return = matches!(abi, ExternAbi::Aarch64IndirectReturn { .. });
+                aarch64::compute_abi_info(cx, self, kind, is_indirect_return)
             }
             "amdgpu" => amdgpu::compute_abi_info(cx, self),
             "arm" => arm::compute_abi_info(cx, self),
