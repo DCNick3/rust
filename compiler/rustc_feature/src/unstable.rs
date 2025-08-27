@@ -188,7 +188,7 @@ declare_features! (
     // no-tracking-issue-start
 
     /// Allows using the `aarch64-indirect-return` ABI
-    (internal, abi_aarch64_indirect_return, "CURRENT_RUSTC_VERSION", None),
+    (unstable, abi_aarch64_indirect_return, "CURRENT_RUSTC_VERSION", None),
     /// Allows using the `unadjusted` ABI; perma-unstable.
     (internal, abi_unadjusted, "1.16.0", None),
     /// Allows using `#![needs_allocator]`, an implementation detail of `#[global_allocator]`.
