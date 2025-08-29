@@ -1,12 +1,12 @@
 error: invalid signature for `extern "aarch64-indirect-return"` function
-  --> $DIR/bad-indirect-return.rs:12:84
+  --> $DIR/bad-indirect-return.rs:13:84
    |
 LL | extern "aarch64-indirect-return" fn non_unit_return(storage_location: *mut i64) -> i64 {
    |                                                                                    ^^^
    |
    = note: functions with the "aarch64-indirect-return" ABI cannot have a return type
 help: remove the return type
-  --> $DIR/bad-indirect-return.rs:12:84
+  --> $DIR/bad-indirect-return.rs:13:84
    |
 LL | extern "aarch64-indirect-return" fn non_unit_return(storage_location: *mut i64) -> i64 {
    |                                                                                    ^^^
