@@ -110,9 +110,9 @@ mod attr_impl {
 
     // The subset of llvm::Attribute needed for arguments, packed into a bitfield.
     #[derive(Clone, Copy, Default, Hash, PartialEq, Eq, HashStable_Generic)]
-    pub struct ArgAttribute(u16);
+    pub struct ArgAttribute(u8);
     bitflags::bitflags! {
-        impl ArgAttribute: u16 {
+        impl ArgAttribute: u8 {
             const NoAlias   = 1 << 1;
             const NoCapture = 1 << 2;
             const NonNull   = 1 << 3;
@@ -120,7 +120,6 @@ mod attr_impl {
             const InReg     = 1 << 5;
             const NoUndef = 1 << 6;
             const CapturesReadOnly = 1 << 7;
-            const StructRet = 1 << 8;
         }
     }
     rustc_data_structures::external_bitflags_debug! { ArgAttribute }
@@ -148,6 +147,8 @@ pub struct ArgAttributes {
     pub pointee_size: Size,
     /// The minimum alignment of the pointee, if any.
     pub pointee_align: Option<Align>,
+    // FIXME: could we store this info in a more compact way?
+    pub struct_ret_size: Option<Size>,
 }
 
 impl ArgAttributes {
@@ -157,6 +158,7 @@ impl ArgAttributes {
             arg_ext: ArgExtension::None,
             pointee_size: Size::ZERO,
             pointee_align: None,
+            struct_ret_size: None,
         }
     }
 
@@ -206,6 +208,7 @@ impl From<ArgAttribute> for ArgAttributes {
             arg_ext: ArgExtension::None,
             pointee_size: Size::ZERO,
             pointee_align: None,
+            struct_ret_size: None,
         }
     }
 }
@@ -840,7 +843,7 @@ mod size_asserts {
 
     use super::*;
     // tidy-alphabetical-start
-    static_assert_size!(ArgAbi<'_, usize>, 56);
-    static_assert_size!(FnAbi<'_, usize>, 80);
+    static_assert_size!(ArgAbi<'_, usize>, 88);
+    static_assert_size!(FnAbi<'_, usize>, 112);
     // tidy-alphabetical-end
 }

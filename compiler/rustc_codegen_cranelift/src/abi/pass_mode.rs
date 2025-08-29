@@ -3,7 +3,7 @@
 use cranelift_codegen::ir::ArgumentPurpose;
 use rustc_abi::{Reg, RegKind};
 use rustc_target::callconv::{
-    ArgAbi, ArgAttribute, ArgAttributes, ArgExtension as RustcArgExtension, CastTarget, PassMode,
+    ArgAbi, ArgAttributes, ArgExtension as RustcArgExtension, CastTarget, PassMode,
 };
 use smallvec::{SmallVec, smallvec};
 
@@ -39,7 +39,7 @@ fn apply_attrs_to_abi_param(param: AbiParam, arg_attrs: ArgAttributes) -> AbiPar
         RustcArgExtension::Sext => param.sext(),
     };
 
-    if arg_attrs.contains(ArgAttribute::StructRet) {
+    if arg_attrs.struct_ret_size.is_some() {
         result.purpose = ArgumentPurpose::StructReturn;
     }
 

@@ -2,7 +2,7 @@ use std::iter;
 
 use rustc_abi::{BackendRepr, HasDataLayout, Primitive, TyAbiInterface};
 
-use crate::callconv::{ArgAbi, ArgAttribute, FnAbi, PassMode, Reg, RegKind, Uniform};
+use crate::callconv::{ArgAbi, FnAbi, PassMode, Reg, RegKind, Uniform};
 use crate::spec::{HasTargetSpec, Target};
 
 /// Indicates the variant of the AArch64 ABI we are compiling for.
@@ -166,7 +166,7 @@ pub(crate) fn compute_abi_info<'a, Ty, C>(
     if is_indirect_return {
         if let [first_argument, ..] = fn_abi.args.as_mut() {
             if let PassMode::Direct(direct) = &mut first_argument.mode {
-                direct.set(ArgAttribute::StructRet);
+                direct.struct_ret_size = Some(first_argument.layout.size);
             }
         }
     }

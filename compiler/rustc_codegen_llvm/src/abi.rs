@@ -39,10 +39,8 @@ trait ArgAttributesExt {
     );
 }
 
-const ABI_AFFECTING_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 2] = [
-    (ArgAttribute::InReg, llvm::AttributeKind::InReg),
-    (ArgAttribute::StructRet, llvm::AttributeKind::StructRet),
-];
+const ABI_AFFECTING_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 1] =
+    [(ArgAttribute::InReg, llvm::AttributeKind::InReg)];
 
 const OPTIMIZATION_ATTRIBUTES: [(ArgAttribute, llvm::AttributeKind); 6] = [
     (ArgAttribute::NoAlias, llvm::AttributeKind::NoAlias),
@@ -71,6 +69,11 @@ fn get_attrs<'ll>(this: &ArgAttributes, cx: &CodegenCx<'ll, '_>) -> SmallVec<[&'
         ArgExtension::None => {}
         ArgExtension::Zext => attrs.push(llvm::AttributeKind::ZExt.create_attr(cx.llcx)),
         ArgExtension::Sext => attrs.push(llvm::AttributeKind::SExt.create_attr(cx.llcx)),
+    }
+    if let Some(size) = this.struct_ret_size {
+        let sret = llvm::CreateStructRetAttr(cx.llcx, cx.type_array(cx.type_i8(), size.bytes()));
+
+        attrs.push(sret)
     }
 
     // Only apply remaining attributes when optimizing
